@@ -1,18 +1,16 @@
 # Event Session Joiner
 
-
-
 * This is a Spark structured streaming job that is capable of (inner) joining any number streams with any kind of fields on any kind of conditions and output any kind of fields.
 
-The input streams must be coming in as JSON objects. The resulting output stream is serialized as JSON.
+* The input streams must be coming in as JSON objects.
 
-
+* The resulting output stream is serialized as JSON.
 
 ## Configuration
 
-
-The job is configured with the following parameters in the `config.yml` file. The config file needs to be uploaded into HDFS and the path needs to be specified as a command line argument at the job submission time.
-
+The job is configured with the following parameters in the `config.yml` file.
+The config file needs to be uploaded into HDFS and the path needs to be specified as a command line argument at the job submission time.
+An example config file can be found here `/src/main/resources/config.yml`.
 
 * `kafka_bootstrap_servers`: quorum of (recommended at least 3) Kafka brokers and their ports; String
 
@@ -38,12 +36,27 @@ The job is configured with the following parameters in the `config.yml` file. Th
 
 * `checkpointLocation`: Specify the checkpoint location. The checkpoint keeps track of the state so the job can be restarted without losing data. This is a path in HDFS; String
 
+## Build
+
+Just run Maven:
+
+```bash
+mvn clean package
+```
 
 ## Deployment
 
+* This app was written to run on `HDP 2.6.5` using `Spark 2.3.x`
+
+* Deploy the job jar to the Metron REST node.
+
+* Adapt the script `submit-event-session-joiner.sh` to your environment (jar location, filename, keytab location, domain name)
+
+* To submit the job execute the `submit-event-session-joiner.sh` script from the Metron REST node.
 
 * Use YARN to manage the lifecycle (kill, monitor,...) the job.
 
-* To submit the job execute the `submit-event-session-joiner.sh` script from the same node the Metron REST server is installed. Adapt the script to your environment!
 
-* You can specify the JAR location and the location of the config file at the top part of this script.
+## ToDos
+
+* Add unit tests
