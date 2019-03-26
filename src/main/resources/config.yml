@@ -1,0 +1,62 @@
+kafka_bootstrap_servers: broker1:6667
+kafka_security_protocol: SASL_PLAINTEXT
+kafka_input_streams:
+  - name: inone
+    topic: inputtopic1
+    delay_threshold: 1 hour
+    columns:
+      - host
+      - qid
+      - size
+      - from
+
+  - name: intwo
+    topic: inputtopic2
+    delay_threshold: 1 hour
+    colums:
+      - host
+      - qid
+      - rcpts
+    join_condition: "inone.qid = intwo.qid and inone.host = intwo.host and inone.ts <= intwo.ts and inone.ts + interval 5 seconds >= intwo.ts"
+
+  - name: inthree
+    topic: inputtopic3
+    delay_threshold: 1 hour
+    columns:
+      - host
+      - qid
+      - attachments
+      - subject
+      - rule
+      - hops_ip
+      - action
+    join_condition: "inone.qid = inthree.qid and inone.host = inthree.host and inone.ts <= inthree.ts and inone.ts + interval 5 seconds >= inthree.ts"
+
+  - name: infour
+    topic: inputtopic4
+    delay_threshold: 1 hour
+    columns:
+      - host
+      - qid
+      - to
+    join_condition: "inone.qid = infour.qid and inone.host = infour.host and inone.ts <= infour.ts and inone.ts + interval 5 seconds >= infour.ts"
+
+output_columns:
+  - inone.timestamp
+  - inone.ts
+  - inone.size
+  - inone.host
+  - inone.qid
+  - inone.from
+  - intwo.rcpts
+  - inthree.attachments
+  - inthree.subject
+  - inthree.rule
+  - inthree.hops_ip
+  - inthree.action
+  - infour.to
+
+output_format: kafka
+kafka_output_topic: output_joined
+checkpointLocation: /apps/metron/myapplication/checkpoint
+
