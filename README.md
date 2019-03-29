@@ -60,3 +60,5 @@ mvn clean package
 ## ToDos
 
 * Add unit tests
+* Modularize
+* Feature: specify datatypes
